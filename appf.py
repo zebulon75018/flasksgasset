@@ -14,7 +14,7 @@ SCRIPT_KEY = "xxxxxxxxx"
 
 sg = shotgun_api3.Shotgun(SERVER_PATH, SCRIPT_NAME, SCRIPT_KEY)
 
-filters =[ ['project', 'is', {'type': 'Project', 'id': 87}] ]
+filters =[ ['project', 'is', {'type': 'Project', 'id': XX}] ]
 fields=["code","image","id","sg_asset_type", "sg_category","description","tags","created_at"]
 
 assets= sg.find("Asset",filters,fields)
