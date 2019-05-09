@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>Filtrify - Multiple categories</title>
+
+<meta name="description" content="Filtrify">
+<meta name="keywords" content="javascript, jquery, filtering, filter, plugin" />
+<meta name="author" content="Luís Almeida">
+
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="/static/css/stylef.css">
+<link rel="stylesheet" href="/static/css/sunburst.css">
+<link rel="stylesheet" href="/static/css/filtrify.css">
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="/static/js/highlight.pack.js"></script>
+<script src="/static/js/filtrify.min.js"></script>
+
+<script type="text/javascript">
+
+$(function() {
+
+	$.filtrify("container", "placeHolder");
+
+});
+
+</script>
+
+</head>
+<body>
+
+<div id="header" role="banner">
+<h2>Beautiful advanced tag filtering with HTML5 and jQuery</h2>
+
+</div>
+
+<div id="main" role="main">
+<div id="content" class="demo">
+
+<h2>Multiple categories</h2>
+
+<div id="placeHolder"></div>
+
+<ul id="container">
+ {%for a in assets %}
+
+    <li data-genre="{{a["sg_asset_type"]}}" data-main-actors="{% for t in a["tags"] %} {{t["name"]}}, {% endfor %}" data-director="{{a["sg_category"]}}"><strong> {{a["code"]}}</strong><img src="{{a["image"]}}"><span>genre: <i>Drama, Sci-Fi, Thriller</i></span><span>actors: <i>{% for t in a["tags"] %} {{t["name"]}} {% endfor %}</i></span><span>director: <i>{{a["sg_category"]}}</i></span></li>
+    </li>
+  {% endfor %}
+
+
+</ul>
+
+</div>
+</div>
+
+</body>
+</html>

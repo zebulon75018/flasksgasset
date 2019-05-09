@@ -1,0 +1,235 @@
+<html>
+<script src="/static/shuffle.js"></script>
+
+<head>
+  <link rel="stylesheet" href="/static/shuffle.css" />
+
+
+</head>
+<body>
+<a href="/logout" > Logout </a>
+<div class="container">
+  <div class="row">
+    <div class="col-12@sm">
+      <h1>Smurf Asset Browser</h1>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-4@sm col-3@md">
+      <div class="filters-group">
+        <label for="filters-search-input" class="filter-label">Search</label>
+        <input class="textfield filter__search js-shuffle-search" type="search" id="filters-search-input" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12@sm filters-group-wrap">
+      <div class="filters-group">
+        <p class="filter-label">Filter</p>
+        <div class="btn-group filter-options">
+         {% for c in cat %}
+          <button class="btn btn--primary" data-group="{{c}}">{{c}}</button>
+	 {% endfor %}
+        </div>
+      </div>
+      <fieldset class="filters-group">
+        <legend class="filter-label">Sort</legend>
+        <div class="btn-group sort-options">
+          <label class="btn active">
+            <input type="radio" name="sort-value" value="dom" checked /> Default
+          </label>
+          <label class="btn">
+            <input type="radio" name="sort-value" value="title" /> Title
+          </label>
+          <label class="btn">
+            <input type="radio" name="sort-value" value="date-created" /> Date Created
+          </label>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div id="grid" class="row my-shuffle-container">
+
+
+
+	{%for a in assets %}
+    <figure class="col-3@xs col-4@sm col-3@md picture-item" data-groups='["{{a["sg_category"]}}"]' data-date-created="2016-07-01" data-title="{{a["code"]}}">
+      <div class="picture-item__inner">
+        <div class="aspect aspect--16x9">
+          <div class="aspect__inner">
+            <img src="{{a["image"]}}"
+              alt="{{a["code"]}}" />
+          </div>
+        </div>
+        <div class="picture-item__details">
+          <figcaption class="picture-item__title">{{a["code"]}}</figcaption>
+          <p class="picture-item__tags hidden@xs">{{a["sg_category"]}}</p>
+        </div>
+      </div>
+    </figure>
+	{% endfor  %}
+
+    <div class="col-1@sm col-1@xs my-sizer-element"></div>
+  </div>
+</div>
+<script>
+var Shuffle = window.Shuffle;
+
+class Demo {
+  constructor(element) {
+    this.element = element;
+    this.shuffle = new Shuffle(element, {
+      itemSelector: '.picture-item',
+      sizer: element.querySelector('.my-sizer-element'),
+    });
+
+    // Log events.
+    this.addShuffleEventListeners();
+    this._activeFilters = [];
+    this.addFilterButtons();
+    this.addSorting();
+    this.addSearchFilter();
+  }
+
+  /**
+   * Shuffle uses the CustomEvent constructor to dispatch events. You can listen
+   * for them like you normally would (with jQuery for example).
+   */
+  addShuffleEventListeners() {
+    this.shuffle.on(Shuffle.EventType.LAYOUT, (data) => {
+      console.log('layout. data:', data);
+    });
+    this.shuffle.on(Shuffle.EventType.REMOVED, (data) => {
+      console.log('removed. data:', data);
+    });
+  }
+
+  addFilterButtons() {
+    const options = document.querySelector('.filter-options');
+    if (!options) {
+      return;
+    }
+    
+    const filterButtons = Array.from(options.children);
+    const onClick = this._handleFilterClick.bind(this);
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', onClick, false);
+    });
+  }
+
+  _handleFilterClick(evt) {
+    const btn = evt.currentTarget;
+    const isActive = btn.classList.contains('active');
+    const btnGroup = btn.getAttribute('data-group');
+    
+    this._removeActiveClassFromChildren(btn.parentNode);
+    
+    let filterGroup;
+    if (isActive) {
+      btn.classList.remove('active');
+      filterGroup = Shuffle.ALL_ITEMS;
+    } else {
+      btn.classList.add('active');
+      filterGroup = btnGroup;
+    }
+    
+    this.shuffle.filter(filterGroup);
+  }
+
+  _removeActiveClassFromChildren(parent) {
+    const { children } = parent;
+    for (let i = children.length - 1; i >= 0; i--) {
+      children[i].classList.remove('active');
+    }
+  }
+
+  addSorting() {
+    const buttonGroup = document.querySelector('.sort-options');
+    if (!buttonGroup) {
+      return;
+    }
+    buttonGroup.addEventListener('change', this._handleSortChange.bind(this));
+  }
+
+  _handleSortChange(evt) {
+    // Add and remove `active` class from buttons.
+    const buttons = Array.from(evt.currentTarget.children);
+    buttons.forEach((button) => {
+      if (button.querySelector('input').value === evt.target.value) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+    
+    // Create the sort options to give to Shuffle.
+    const { value } = evt.target;
+    let options = {};
+    
+    function sortByDate(element) {
+      return element.getAttribute('data-created');
+    }
+    
+    function sortByTitle(element) {
+      return element.getAttribute('data-title').toLowerCase();
+    }
+    
+    if (value === 'date-created') {
+      options = {
+        reverse: true,
+        by: sortByDate,
+      };
+    } else if (value === 'title') {
+      options = {
+        by: sortByTitle,
+      };
+    }
+    this.shuffle.sort(options);
+  }
+
+  // Advanced filtering
+  addSearchFilter() {
+    const searchInput = document.querySelector('.js-shuffle-search');
+    if (!searchInput) {
+      return;
+    }
+    searchInput.addEventListener('keyup', this._handleSearchKeyup.bind(this));
+  }
+
+  /**
+   * Filter the shuffle instance by items with a title that matches the search input.
+   * @param {Event} evt Event object.
+   */
+  _handleSearchKeyup(evt) {
+    const searchText = evt.target.value.toLowerCase();
+    this.shuffle.filter((element, shuffle) => {
+      // If there is a current filter applied, ignore elements that don't match it.
+      if (shuffle.group !== Shuffle.ALL_ITEMS) {
+        // Get the item's groups.
+        const groups = JSON.parse(element.getAttribute('data-groups'));
+        const isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
+        // Only search elements in the current group
+        if (!isElementInCurrentGroup) {
+          return false;
+        }
+      }
+      const titleElement = element.querySelector('.picture-item__title');
+      const titleText = titleElement.textContent.toLowerCase().trim();
+      return titleText.indexOf(searchText) !== -1;
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  window.demo = new Demo(document.getElementById('grid'));
+});
+
+</script>
+</body>
+</html>
