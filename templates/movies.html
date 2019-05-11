@@ -24,7 +24,37 @@
 
 $(function() {
 
-	$.filtrify("container", "placeHolder");
+//	$.filtrify("container", "placeHolder");
+
+
+   var ft =  $.filtrify("container", "placeHolder", {
+        close : true,
+        callback : function( query, match, mismatch ) {
+            if ( !mismatch.length ) {
+                $("#legend").html("<i>Viewing all assets.</i>");
+            } else {
+                var category, tags, i, tag, legend = "<h4>Viewing:</h4>";
+                for ( category in query ) {
+                    tags = query[category];
+                    if ( tags.length ) {
+                        legend += "<p><span>" + category + ":</span>";
+                        for ( i = 0; i < tags.length; i++ ) {
+                            tag = tags[i];
+                            legend += "<em>" + tag + "</em>";
+                        };
+                        legend += "</p>";
+                    };
+                };
+                legend += "<p><i>" + match.length + " asset" + (match.length !== 1 ? "s" : "") + " found.</i></p>";
+                $("#legend").html( legend );
+            };
+        }
+    });
+
+
+  $("div#reset span").click(function() {
+        ft.reset();
+    });
 
 });
 
@@ -33,22 +63,24 @@ $(function() {
 </head>
 <body>
 
-<div id="header" role="banner">
-<h2>Beautiful advanced tag filtering with HTML5 and jQuery</h2>
-
-</div>
-
 <div id="main" role="main">
 <div id="content" class="demo">
 
-<h2>Multiple categories</h2>
+<h2>Assets </h2>
 
 <div id="placeHolder"></div>
+
+<div id="reset" ><span>reset</span></div>
+<div id="legend"><i>Viewing all.</i></div>
 
 <ul id="container">
  {%for a in assets %}
 
-    <li data-genre="{{a["sg_asset_type"]}}" data-main-actors="{% for t in a["tags"] %} {{t["name"]}}, {% endfor %}" data-director="{{a["sg_category"]}}"><strong> {{a["code"]}}</strong><img src="{{a["image"]}}"><span>genre: <i>Drama, Sci-Fi, Thriller</i></span><span>actors: <i>{% for t in a["tags"] %} {{t["name"]}} {% endfor %}</i></span><span>director: <i>{{a["sg_category"]}}</i></span></li>
+    <li data-genre="{{a["sg_asset_type"]}}" data-tag="{% for t in a["tags"] %} {{t["name"]}}, {% endfor %}" data-category="{{a["sg_category"]}}">
+  <div>
+   <center><strong> {{a["code"]}}</strong></center>
+  </div>
+    <img src="{{a["image"]}}"><span>genre: <i>{{a["sg_asset_type"]}}</i></span><span>tags: <i>{% for t in a["tags"] %} {{t["name"]}} {% endfor %}</i></span><span>category: <i>{{a["sg_category"]}}</i></span></li>
     </li>
   {% endfor %}
 
