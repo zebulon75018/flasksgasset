@@ -12,6 +12,9 @@ https://github.com/shotgunsoftware/python-api
 Modify the app.py with the subdomain shotgun, the name script , the key, and the id of your project.
 There's a page login ,the login is admin , password : password.
 
+python  app.py 
+or still wip appf.py
+
 Then you will have a page with all asset of your projet, so you can browse them, filter by category.
 
 ![screenshot](login.jpg)
