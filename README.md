@@ -24,3 +24,4 @@ or still wip appf.py
 Then you will have a page with all asset of your projet, so you can browse them, filter by category.
 
 ![screenshot](login.jpg)
+![screenshot](screen1.jpg)
