@@ -1,9 +1,8 @@
+<html>
+	<head>
 <link rel="stylesheet" href="/static/style.css" type="text/css">
-{% block body %}
-{% if session['logged_in'] %}
-<p>You're logged in already!</p>
-{% else %}
- 
+</head>
+<body>
  
 <form action="/login" method="POST">
 	<div class="login">
@@ -26,9 +25,22 @@
                 <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block" >
 			    <br>
 			</div>
+			
+			{% with messages = get_flashed_messages() %}
+         {% if messages %}
+               {% for message in messages %}
+                 {{ message }}<br/>
+               {% endfor %}
+         {% endif %}
+      {% endwith %}
+	  
 		</div>
+		
+		
+ 
+ 
 	</div>
 </form>
  
-{% endif %}
-{% endblock %}
+</body>
+</html>
