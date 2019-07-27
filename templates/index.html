@@ -1,26 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" >
-
-<head>
-  <meta charset="UTF-8">
-  <title>Shuffle homepage demo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-
-  
-<link rel="stylesheet" href="/static/style.css" type="text/css">
-      <link rel="stylesheet" href="/static/css/style.css">
-
-  
-</head>
-
-<body>
-<a href="/logout" > Logout </a>
-
+{% extends "layout.html" %}
+{% block content %}
   <div class="container">
   <div class="row">
     <div class="col-12@sm">
-      <h1>Shuffle homepage demo</h1>
+      <h1>Assets / Version Browser</h1>
     </div>
   </div>
 </div>
@@ -72,7 +55,7 @@
         <div class="aspect aspect--16x9">
           <div class="aspect__inner">
             <a href="/asset/{{a["id"]}}">
-            <img src="{{a["image"]}}"
+            <img class="lazy" data-src="{{a["image"]}}"
               alt="{{a["code"]}}" />
              </a>
           </div>
@@ -90,7 +73,4 @@
 </div>
   <script src='/static/shuffle.js'></script>
     <script  src="/static/js/index.js"></script>
-
-</body>
-
-</html>
+{% endblock %}
