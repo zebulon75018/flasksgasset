@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
   
+<link rel="stylesheet" href="/static/style.css" type="text/css">
       <link rel="stylesheet" href="/static/css/style.css">
 
   
@@ -64,14 +65,16 @@
 <div class="container">
   <div id="grid" class="row my-shuffle-container">
         {%for a in assets %}
+        
+        {% if a["image"] %}
     <figure class="col-3@xs col-4@sm col-3@md picture-item" data-groups='["{{a["sg_category"]}}"]' data-date-created="2017-04-30" data-title="{{a["code"]}}">
       <div class="picture-item__inner">
         <div class="aspect aspect--16x9">
           <div class="aspect__inner">
-            <a href="/asset/{{a["id"]}}" > 
+            <a href="/asset/{{a["id"]}}">
             <img src="{{a["image"]}}"
               alt="{{a["code"]}}" />
-            </a>
+             </a>
           </div>
         </div>
         <div class="picture-item__details">
@@ -80,6 +83,7 @@
         </div>
       </div>
     </figure>
+    {% endif %}
   {% endfor %}
     <div class="col-1@sm col-1@xs my-sizer-element"></div>
   </div>
