@@ -8,9 +8,9 @@ import pprint
 
 app = Flask(__name__)
 
-SERVER_PATH ="https://xxxxx.shotgunstudio.com/"
-SCRIPT_NAME = 'xxxxx'
-SCRIPT_KEY = "xxxxxx"
+SERVER_PATH ="https://xxxx.shotgunstudio.com/"
+SCRIPT_NAME = 'xxxx'
+SCRIPT_KEY = "xxxxx"
 
 sg = shotgun_api3.Shotgun(SERVER_PATH, SCRIPT_NAME, SCRIPT_KEY)
 
@@ -38,8 +38,8 @@ def do_admin_login():
 
 @app.route("/logout")
 def logout():
-    session['logged_in'] = False
-    return home()
+    session.clear()
+    return render_template('login.html')
 
 @app.route('/asset/<id>')
 def asset(id): 
@@ -54,10 +54,10 @@ def asset(id):
 
 @app.route('/')
 def home():
-    #if not session.get('logged_in'):
-    #    return render_template('login.html')
-    #else:
-    return render_template("index.html",assets=assets,cat=cat)
+    if "logged_in" not in  session:
+        return render_template('login.html')
+    else:
+        return render_template("index.html",assets=assets,cat=cat)
 
 
 if __name__ == '__main__':
