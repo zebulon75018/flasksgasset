@@ -9,12 +9,14 @@ import pprint
 app = Flask(__name__)
 
 SERVER_PATH ="https://xxxx.shotgunstudio.com/"
-SCRIPT_NAME = 'xxxx'
-SCRIPT_KEY = "xxxxx"
+SCRIPT_NAME = 'xxxxx'
+SCRIPT_KEY = "xxxxxx"
+
+PROJECT_ID = xx 
 
 sg = shotgun_api3.Shotgun(SERVER_PATH, SCRIPT_NAME, SCRIPT_KEY)
 
-filters =[ ['project', 'is', {'type': 'Project', 'id': 87}] ]
+filters =[ ['project', 'is', {'type': 'Project', 'id': PROJECT_ID}] ]
 fields=["code","image","id","sg_category","sg_asset_type","description","tags","created_at","sg_published_files"]
 
 assets= sg.find("Asset",filters,fields)
