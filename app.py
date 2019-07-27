@@ -8,14 +8,14 @@ import pprint
 
 app = Flask(__name__)
 
-SERVER_PATH ="https://xxxx.shotgunstudio.com/" 
-SCRIPT_NAME = 'xxxxxx'
-SCRIPT_KEY = "xxxxxxxxxxxxxx"
+SERVER_PATH ="https://xxxxx.shotgunstudio.com/"
+SCRIPT_NAME = 'xxxxx'
+SCRIPT_KEY = "xxxxxx"
 
 sg = shotgun_api3.Shotgun(SERVER_PATH, SCRIPT_NAME, SCRIPT_KEY)
 
-filters =[ ['project', 'is', {'type': 'Project', 'id': xx}] ]
-fields=["code","image","id","sg_asset_type","description","tags","created_at","sg_published_files"]
+filters =[ ['project', 'is', {'type': 'Project', 'id': 87}] ]
+fields=["code","image","id","sg_category","sg_asset_type","description","tags","created_at","sg_published_files"]
 
 assets= sg.find("Asset",filters,fields)
 idxasset = {}
@@ -46,7 +46,7 @@ def asset(id):
     filters =[ ['entity', 'is', {'type': 'Asset', 'id': int(id)}] ]
     #fields=["code","image","id"]
     #pf= sg.find("PublishedFile",filters,fields)
-    fields=["code","image","entity","id","sg_uploaded_movie_webm","sg_uploaded_movie_mp4","sg_uploaded_movie_frame_rate"]
+    fields=["code","image","entity","id","sg_uploaded_movie_webm","sg_uploaded_movie_mp4","sg_uploaded_movie_frame_rate","sg_uploaded_movie_image"]
     pf= sg.find("Version",filters,fields)
     pprint.pprint(pf)
     return render_template("asset.html", pf=pf,asset=idxasset[int(id)])
